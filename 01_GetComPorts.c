@@ -8,33 +8,26 @@
 // _WIN32 macro
 #ifdef _WIN32
     #include <windows.h>
-   	#define OSTYPE WINDOWS
 
 // Checking for mac OS with
 // __APPLE__ macro
 #elif __APPLE__
 
-	   #define OSTYPE MACOS
-
 // Checking for linux OS with
 // __linux__ macro
 #elif __linux__
-	   #include <fcntl.h>
+	#include <fcntl.h>
     #include <termios.h>
     #include <dirent.h>
-	   #define OSTYPE LINUX
 
 #else
     perror("Unsupported OS\n");
 
 #endif
 
-
-
-
 int main()
 {
-#ifdef OSTYPE == WINDOWS    
+#ifdef _WIN32    
     HKEY hKey;
     char keyName[1024];
     DWORD keySize = sizeof(keyName);
@@ -54,7 +47,7 @@ int main()
     }
     return 0;
     
-#elif OSTYPE == LINUX
+#elif __linux__
     DIR *dir;
     struct dirent *entry;
     char *dev_dir = "/dev";
@@ -78,13 +71,13 @@ int main()
     }
 
     closedir(dir);
+    
+    //system("ls -l /sys/class/tty/*/device/driver | grep -v \"platform/drivers/serial8250\" | awk '{print $9}' | awk -F'/' '{print \"/dev/\" $5}'");
+        
     return 0;
 
-#endif /* OSTYPE == WINDOWS */
-
-#ifdef OSTYPE == LINUX
-
-// ls -l /sys/class/tty/*/device/driver | grep -v "platform/drivers/serial8250" | awk '{print $9}' | awk -F'/' '{print "/dev/" $5}'
-
+#else
+    perror("Unsupported OS\n");
 #endif
+
 }
