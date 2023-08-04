@@ -1,25 +1,31 @@
+// Compiling gcc -O2 -o Builds/ThreadPlayMusic ThreadPlayMusic.c -lmpg123 -lao -lpthread
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>  //Header file for sleep(). man 3 sleep for details.
 #include <pthread.h>
 #include <ao/ao.h>
 #include <mpg123.h>
+#include <wiringPi.h>
 
 #define BITS 8
   
 // A normal C function that is executed as a thread 
 // when its name is specified in pthread_create()
-int playMusic(char *path);
+void* playMusic(void *path);
+const buttons[4] = {2,14,17,23};
+//enum 
+void* gpiohandling(void *targs);
    
 int main()
 {
     pthread_t thread_id;
     int i = 0;
 
-    char path[] = "/media/videeki/Adatok/Zene/...";
+    char path[] = "/media/videeki/Adatok/Zene/Vegyes/Amánjó főiskola he.mp3";
 
     printf("Before Thread\n");
-    pthread_create(&thread_id, NULL, playMusic, &path);
+    pthread_create(&thread_id, NULL, playMusic, (void*)&path);
     for(i = 0; i < 100; i++)
     {
         printf("Printed main %d times\n", i);
@@ -30,7 +36,7 @@ int main()
     exit(0);
 }
 
-int playMusic(char *path);
+void* playMusic(void *path)
 {
     mpg123_handle *mh;
     unsigned char *buffer;
@@ -54,7 +60,7 @@ int playMusic(char *path);
     buffer = (unsigned char*) malloc(buffer_size * sizeof(unsigned char));
 
     /* open the file and get the decoding format */
-    mpg123_open(mh, path);
+    mpg123_open(mh, (char*)path);
     mpg123_getformat(mh, &rate, &channels, &encoding);
 
     /* set the output format and open the output device */
@@ -78,4 +84,35 @@ int playMusic(char *path);
     ao_shutdown();
 
     return 0;
+}
+
+void* gpiohandling(void *state)
+{
+    switch ((int)state)
+    {
+        case 0:
+        {
+            wiringPiSetupGpio();
+            for(int i = 0; i < sizeof(buttons); i++)
+            {
+                pinMode(buttons[i],INPUT);
+                delay(10);
+            }
+            break;  
+        }
+        case 1:
+        {
+            for(int i = 0; i < sizeof(buttons); i++)
+            {
+                digitalRead(buttons[i]);
+                delay(10);
+            } 
+            break;  
+        }
+        default:
+        {
+            run = FALSE;
+            break;
+        }
+    }
 }
