@@ -1,4 +1,4 @@
-// Compiling gcc -O2 -o Builds/ThreadPlayMusic ThreadPlayMusic.c -lmpg123 -lao -lpthread
+// Compiling gcc -O2 -o ThreadPlayMusic ThreadPlayMusic.c -lmpg123 -lao -lpthread
 
 #include <stdio.h>
 #include <stdlib.h>

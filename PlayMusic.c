@@ -2,7 +2,7 @@
 /*   Source: http://hzqtc.github.io/2012/05/play-mp3-with-libmpg123-and-libao.html               */
 /*   Help: https://stackoverflow.com/questions/26007700/play-mp3-on-raspberry-with-mpg123-and-c  */
 /*                                                                                               */
-/*   Compiling: gcc -O2 -o Builds/PlayMusic PlayMusic.c -lmpg123 -lao                            */
+/*   Compiling: gcc -O2 -o PlayMusic PlayMusic.c -lmpg123 -lao                            */
 /*************************************************************************************************/
 
 

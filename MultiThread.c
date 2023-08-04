@@ -1,4 +1,4 @@
-// Compiling: gcc MultiThread.c -o /home/videeki/C_Fundamentals/Builds/MultiThread -lpthread
+// Compiling: gcc MultiThread.c -o MultiThread -lpthread
 
 #include <stdio.h>
 #include <stdlib.h>
