@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <dirent.h>
+#include <string.h>
 
 int main (int argc, char *argv[]) {
     struct dirent *pDirent;
@@ -7,7 +8,7 @@ int main (int argc, char *argv[]) {
 
     // Ensure correct argument count.
 
-    if (argc != 2) {
+    if (argc != 3) {
         printf ("Usage: testprog <dirname>\n");
         return 1;
     }
@@ -23,7 +24,10 @@ int main (int argc, char *argv[]) {
     // Process each entry.
 
     while ((pDirent = readdir(pDir)) != NULL) {
-        printf ("[%s]\n", pDirent->d_name);
+        if(strstr(pDirent->d_name, argv[2]))
+        {
+            printf ("%s\n", pDirent->d_name);
+        }
     }
 
     // Close directory and exit.
