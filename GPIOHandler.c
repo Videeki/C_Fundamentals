@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 {
     //int LED = atoi(argv[1]);
     int LED = 23;
-    char mode[] = "out";
+    char mode[] = "in";
 
     initPIN(LED);
     puts("Init DONE!");
@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
     puts("Setup DONE!");
     puts("Let's get ready to RUMBLE!!!");
 
-    for(int i = 0; i < 10; i++)
+    /*for(int i = 0; i < 10; i++)
     {
         writePIN(LED, ON);
         puts("ON");
@@ -34,7 +34,14 @@ int main(int argc, char* argv[])
         writePIN(LED, OFF);
         puts("OFF");
         sleep(1);
+    }*/
+
+    for(int i = 0; i < 10; i++)
+    {
+        printf("%d\n", readPIN(LED));
+        sleep(1);
     }
+
     puts("GAME OVER");
     deinitPIN(LED);
     puts("Deinit DONE!");
@@ -100,17 +107,19 @@ int writePIN(int pinNr, int value)
 int readPIN(int pinNr)
 {
     int value;
-    char pinPath[33];
+    char pinPath[50];
     FILE *readPin;
     sprintf(pinPath, "/sys/class/gpio/gpio%d/value", pinNr);
-    readPin = fopen(pinPath, "w");
-
+    
+    readPin = fopen(pinPath, "r");
+    
     if (readPin == NULL) {
         perror("Error while opening the file.\n");
         exit(EXIT_FAILURE);
     }
 
-    fscanf(readPin, "%d", value);
+    fscanf(readPin, "%d", &value);
+    
     fclose(readPin);
    
     return value;
