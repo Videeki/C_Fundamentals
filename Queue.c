@@ -1,20 +1,24 @@
 #include <stdio.h>
-# define SIZE 10
-void enqueue();
-void dequeue();
-void show();
-int inp_arr[SIZE];
-int Rear = - 1;
-int Front = - 1;
-int main()
+#include <stdlib.h>
+#include <string.h>
+
+#define SIZE_OF_BUFFER 8
+int bufferLength = 0;
+int readIndex = 0;
+int writeIndex = 0;
+int circularBuffer[SIZE_OF_BUFFER];
+
+int enqueue();
+int dequeue();
+int nrOfElements();
+int show();
+
+int main(int argc, char* argv[])
 {
     int ch;
     while (1)
-    {   
-        puts("The real array: ");
-        for (int i = 0; i <= SIZE; i++)
-            printf("%d ", inp_arr[i]);
-        printf("\n");
+    {
+
 
         printf("1.Enqueue Operation\n");
         printf("2.Dequeue Operation\n");
@@ -25,63 +29,83 @@ int main()
         switch (ch)
         {
             case 1:
-                enqueue();
+            enqueue();
             break;
             case 2:
-                dequeue();
+            dequeue();
             break;
             case 3:
-                show();
+            show();
             break;
             case 4:
-                return 0;
+            exit(0);
             default:
             printf("Incorrect choice \n");
         } 
     } 
-} 
- 
-void enqueue()
+    return 0;
+}
+
+int enqueue()
 {
-    int insert_item;
-    if (Rear == SIZE - 1)
-       printf("Overflow \n");
-    else
+    if(bufferLength == SIZE_OF_BUFFER)
     {
-        if (Front == - 1)
-      
-        Front = 0;
-        printf("Element to be inserted in the Queue\n : ");
-        scanf("%d", &insert_item);
-        Rear = Rear + 1;
-        inp_arr[Rear] = insert_item;
+        printf("Buffer is full!\n");
+        return -1;
     }
-} 
- 
-void dequeue()
-{
-    if (Front == - 1 || Front > Rear)
-    {
-        printf("Underflow \n");
-        return ;
-    }
-    else
-    {
-        printf("Element deleted from the Queue: %d\n", inp_arr[Front]);
-        Front = Front + 1;
-    }
-} 
- 
-void show()
-{
     
-    if (Front == - 1)
-        printf("Empty Queue \n");
-    else
+    scanf("%d", &circularBuffer[writeIndex]);
+
+    bufferLength++;
+    writeIndex++;
+
+    if(writeIndex == SIZE_OF_BUFFER)
     {
-        printf("Queue: \n");
-        for (int i = Front; i <= Rear; i++)
-            printf("%d ", inp_arr[i]);
-        printf("\n");
+        writeIndex = 0;
     }
+
+    return 0;
+}
+
+int dequeue()
+{
+    if(bufferLength == 0) 
+    {
+        printf("Buffer is empty!\n");
+        return -1;
+    }
+
+    printf("The output value is %d\n", circularBuffer[readIndex]);
+
+    bufferLength--;
+    readIndex++;
+
+    if(readIndex == SIZE_OF_BUFFER) 
+    {
+        readIndex = 0;
+    }
+    
+    return 0;
+}
+
+int nrOfElements()
+{
+    return 0;
+}
+
+int show()
+{
+    int i = 0;
+    if(bufferLength == 0) 
+    {
+        printf("Buffer is empty!\n");
+        return -1;
+    }
+
+    for(i = readIndex; i < bufferLength; i++)
+    {
+        printf("%d ", circularBuffer[i]);
+    }
+    printf("\n");
+    return 0;
 }
