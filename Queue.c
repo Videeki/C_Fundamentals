@@ -6,7 +6,7 @@
 int bufferLength = 0;
 int readIndex = 0;
 int writeIndex = 0;
-int circularBuffer[SIZE_OF_BUFFER];
+char circularBuffer[SIZE_OF_BUFFER][255];
 
 int enqueue();
 int dequeue();
@@ -18,12 +18,18 @@ int main(int argc, char* argv[])
     int ch;
     while (1)
     {
-
+        int i = 0;
+        for(i = 0; i < SIZE_OF_BUFFER; i++)
+        {
+            printf("%s ", circularBuffer[i]);
+        }
+        printf("\n\n");
 
         printf("1.Enqueue Operation\n");
         printf("2.Dequeue Operation\n");
         printf("3.Display the Queue\n");
-        printf("4.Exit\n");
+        printf("4.Display number of elements\n");
+        printf("5.Exit\n");
         printf("Enter your choice of operations : ");
         scanf("%d", &ch);
         switch (ch)
@@ -38,6 +44,9 @@ int main(int argc, char* argv[])
             show();
             break;
             case 4:
+            nrOfElements();
+            break;
+            case 5:
             exit(0);
             default:
             printf("Incorrect choice \n");
@@ -54,7 +63,7 @@ int enqueue()
         return -1;
     }
     
-    scanf("%d", &circularBuffer[writeIndex]);
+    scanf("%s", circularBuffer[writeIndex]);
 
     bufferLength++;
     writeIndex++;
@@ -75,7 +84,8 @@ int dequeue()
         return -1;
     }
 
-    printf("The output value is %d\n", circularBuffer[readIndex]);
+    printf("The output value is %s\n", circularBuffer[readIndex]);
+    //circularBuffer[readIndex] = "";
 
     bufferLength--;
     readIndex++;
@@ -90,7 +100,8 @@ int dequeue()
 
 int nrOfElements()
 {
-    return 0;
+    printf("Nr of elements: %d\n", bufferLength);
+    return bufferLength;
 }
 
 int show()
@@ -102,10 +113,25 @@ int show()
         return -1;
     }
 
-    for(i = readIndex; i < bufferLength; i++)
+    if(readIndex < writeIndex)
     {
-        printf("%d ", circularBuffer[i]);
+        for(i = readIndex; i <= writeIndex; i++)
+        {
+            printf("%s ", circularBuffer[i]);
+        }
     }
+    else if(readIndex > writeIndex)
+    {
+        for(i = writeIndex; i <= readIndex; i++)
+        {
+            printf("%s ", circularBuffer[i]);
+        }
+    }
+    else
+    {
+        printf("Buffer is empty!\n");
+    }
+    
     printf("\n");
     return 0;
 }
