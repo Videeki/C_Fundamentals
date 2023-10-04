@@ -8,8 +8,11 @@ int readIndex = 0;
 int writeIndex = 0;
 char circularBuffer[SIZE_OF_BUFFER][255];
 
-int enqueue();
-int dequeue();
+//int obtain(int *maxQueueSize);  //Returns a reference to a queue.
+int enqueue();  //Adds an element to the back of a queue.
+int dequeue();  //Removes an element from the front of a queue and returns the element.
+//int preview();  //Returns the element at the front of the queue without removing the element from the queue.
+//int getStatus();    //Returns information about the current state of a queue, such as the number of elements currently in the queue.
 int nrOfElements();
 int show();
 
@@ -54,6 +57,12 @@ int main(int argc, char* argv[])
     } 
     return 0;
 }
+
+//int obtaion(int *maxQueueSize)
+//{
+//
+//    return 0;
+//}
 
 int enqueue()
 {
@@ -106,30 +115,21 @@ int nrOfElements()
 
 int show()
 {
-    int i = 0;
     if(bufferLength == 0) 
     {
         printf("Buffer is empty!\n");
         return -1;
     }
 
-    if(readIndex < writeIndex)
+    int i = readIndex;
+    while(i != writeIndex)
     {
-        for(i = readIndex; i <= writeIndex; i++)
+        printf("%s ", circularBuffer[i]);
+        i++;
+        if(i == SIZE_OF_BUFFER)
         {
-            printf("%s ", circularBuffer[i]);
+            i = 0;
         }
-    }
-    else if(readIndex > writeIndex)
-    {
-        for(i = writeIndex; i <= readIndex; i++)
-        {
-            printf("%s ", circularBuffer[i]);
-        }
-    }
-    else
-    {
-        printf("Buffer is empty!\n");
     }
     
     printf("\n");
