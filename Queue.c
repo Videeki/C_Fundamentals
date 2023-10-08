@@ -2,131 +2,85 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SIZE_OF_BUFFER 8
-int bufferLength = 0;
-int readIndex = 0;
-int writeIndex = 0;
-char circularBuffer[SIZE_OF_BUFFER][255];
+#include "Queue.h"
 
-//int obtain(int *maxQueueSize);  //Returns a reference to a queue.
-int enqueue();  //Adds an element to the back of a queue.
-int dequeue();  //Removes an element from the front of a queue and returns the element.
-//int preview();  //Returns the element at the front of the queue without removing the element from the queue.
-//int getStatus();    //Returns information about the current state of a queue, such as the number of elements currently in the queue.
-int nrOfElements();
-int show();
 
-int main(int argc, char* argv[])
+int obtain(string_Queue_t* queueRef, char* name, int maxQueueSize)
 {
-    int ch;
-    while (1)
-    {
-        int i = 0;
-        for(i = 0; i < SIZE_OF_BUFFER; i++)
-        {
-            printf("%s ", circularBuffer[i]);
-        }
-        printf("\n\n");
+    queueRef->readIndex = 0;
+    queueRef->writeIndex = 0;
+    queueRef->bufferLength = 0;
+    strcpy(queueRef->name, name);
+    queueRef->maxQueueSize = maxQueueSize;
+    queueRef->queueMemory = (char**)malloc(maxQueueSize * sizeof(char*)); 
 
-        printf("1.Enqueue Operation\n");
-        printf("2.Dequeue Operation\n");
-        printf("3.Display the Queue\n");
-        printf("4.Display number of elements\n");
-        printf("5.Exit\n");
-        printf("Enter your choice of operations : ");
-        scanf("%d", &ch);
-        switch (ch)
-        {
-            case 1:
-            enqueue();
-            break;
-            case 2:
-            dequeue();
-            break;
-            case 3:
-            show();
-            break;
-            case 4:
-            nrOfElements();
-            break;
-            case 5:
-            exit(0);
-            default:
-            printf("Incorrect choice \n");
-        } 
-    } 
+    if(queueRef->queueMemory == NULL)
+    {
+        return -1;
+    }
+
     return 0;
 }
 
-//int obtaion(int *maxQueueSize)
-//{
-//
-//    return 0;
-//}
-
-int enqueue()
+int enqueue(string_Queue_t* queueRef, char* data)
 {
-    if(bufferLength == SIZE_OF_BUFFER)
+    if(queueRef->bufferLength == queueRef->maxQueueSize)
     {
         printf("Buffer is full!\n");
         return -1;
     }
+    queueRef->queueMemory[queueRef->writeIndex] = (char*)malloc(255 * sizeof(char));
+    strcpy(queueRef->queueMemory[queueRef->writeIndex], data);
+
+    queueRef->bufferLength++;
+    queueRef->writeIndex++;
     
-    scanf("%s", circularBuffer[writeIndex]);
 
-    bufferLength++;
-    writeIndex++;
-
-    if(writeIndex == SIZE_OF_BUFFER)
+    if(queueRef->writeIndex == queueRef->maxQueueSize)
     {
-        writeIndex = 0;
+        queueRef->writeIndex = 0;
     }
 
     return 0;
 }
 
-int dequeue()
+char* dequeue(string_Queue_t* queueRef)
 {
-    if(bufferLength == 0) 
+    if(queueRef->bufferLength == 0) 
     {
-        printf("Buffer is empty!\n");
-        return -1;
+        return "Buffer is empty!\n";
     }
 
-    printf("The output value is %s\n", circularBuffer[readIndex]);
-    //circularBuffer[readIndex] = "";
+    queueRef->bufferLength--;
+    queueRef->readIndex++;
 
-    bufferLength--;
-    readIndex++;
-
-    if(readIndex == SIZE_OF_BUFFER) 
+    if(queueRef->readIndex == queueRef->maxQueueSize)
     {
-        readIndex = 0;
+        queueRef->readIndex = 0;
     }
     
-    return 0;
+    return queueRef->queueMemory[queueRef->readIndex];
 }
 
-int nrOfElements()
+int nrOfElements(string_Queue_t* queueRef)
 {
-    printf("Nr of elements: %d\n", bufferLength);
-    return bufferLength;
+    return queueRef->bufferLength;
 }
 
-int show()
+int show(string_Queue_t* queueRef)
 {
-    if(bufferLength == 0) 
+    if(queueRef->bufferLength == 0) 
     {
         printf("Buffer is empty!\n");
         return -1;
     }
 
-    int i = readIndex;
-    while(i != writeIndex)
+    int i = queueRef->readIndex;
+    while(i < queueRef->bufferLength)
     {
-        printf("%s ", circularBuffer[i]);
+        printf("%s ", queueRef->queueMemory[i]);
         i++;
-        if(i == SIZE_OF_BUFFER)
+        if(i == queueRef->maxQueueSize)
         {
             i = 0;
         }
@@ -134,4 +88,10 @@ int show()
     
     printf("\n");
     return 0;
+}
+
+char* flush(string_Queue_t* queueRef)
+{
+    free(queueRef->queueMemory);
+    return queueRef->name;
 }
