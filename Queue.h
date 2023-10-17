@@ -1,9 +1,9 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#define VERSION_MAJOR   0
-#define VERSION_MINOR   0
-#define VERSION_FIX     9
+#define QUEUE_VERSION_MAJOR   0
+#define QUEUE_VERSION_MINOR   1
+#define QUEUE_VERSION_FIX     0
 
 typedef struct
 {

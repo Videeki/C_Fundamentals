@@ -12,7 +12,8 @@ int obtain(string_Queue_t* queueRef, char* name, int maxQueueSize)
     queueRef->bufferLength = 0;
     strcpy(queueRef->name, name);
     queueRef->maxQueueSize = maxQueueSize;
-    queueRef->queueMemory = (char**)malloc(maxQueueSize * sizeof(char*)); 
+    queueRef->queueMemory = (char**)malloc(maxQueueSize * sizeof(char*));
+
 
     if(queueRef->queueMemory == NULL)
     {
@@ -45,12 +46,15 @@ int enqueue(string_Queue_t* queueRef, char* data)
 }
 
 char* dequeue(string_Queue_t* queueRef)
-{
+{   
+    
     if(queueRef->bufferLength == 0) 
     {
         return "Buffer is empty!\n";
     }
 
+    char *temp = queueRef->queueMemory[queueRef->readIndex];
+    
     queueRef->bufferLength--;
     queueRef->readIndex++;
 
@@ -59,7 +63,7 @@ char* dequeue(string_Queue_t* queueRef)
         queueRef->readIndex = 0;
     }
     
-    return queueRef->queueMemory[queueRef->readIndex];
+    return temp;
 }
 
 int nrOfElements(string_Queue_t* queueRef)
