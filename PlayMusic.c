@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "PlayMusic.h"
+
 #ifdef _WIN32
 	#include <windows.h>
     #include <mmsystem.h>
@@ -39,35 +41,8 @@
 
 #endif
 
-int init();
-int play(char *argv);
-int close();
 
-
-
-int main(int argc, char *argv[])
-{
-    puts("Version 0.4\n");
-
-    if(argc<2)
-    {
-        puts("There is no music path");
-        return -1;
-    }
-
-    puts("Music initialization");
-    init();
-    
-    printf("Play the following music: %s\n", argv[1]);
-    play(argv[1]);
-
-    puts("Music closed");
-    close();
-
-    return 0;
-}
-
-int init()
+int initMusic()
 {
     #ifdef _WIN32
         // Not neccesary the initialization //
@@ -89,19 +64,21 @@ int init()
     return 0;
 }
 
-int play(char *argv)
+int playMusic(char *path)
 {
     #ifdef _WIN32
         char cmd[1024];
-        sprintf(cmd, "open \"%s\" type mpegvideo alias mp3", argv);
+        sprintf(cmd, "open \"%s\" type mpegvideo alias mp3", path);
         
         mciSendString(cmd, NULL, 0, NULL);
     
         mciSendString("play mp3 wait", NULL, 0, NULL);
 
+        mciSendString("close mp3", NULL, 0, NULL);
+
     #elif __linux__
         // open the file and get the decoding format //
-        mpg123_open(mh, argv);
+        mpg123_open(mh, path);
         mpg123_getformat(mh, &rate, &channels, &encoding);
 
         // set the output format and open the output device //
@@ -124,7 +101,7 @@ int play(char *argv)
     return 0;
 }
 
-int close()
+int closeMusic()
 {
     #ifdef _WIN32
         // Not neccesary the initialization //
