@@ -13,24 +13,24 @@ int main(int argc, char* argv[])
 
   config PRI;
   //section PRI;
-  char* configStr = "[Default]\r\nFolder=C:\\Users\\Videeki\\Music\\Vegyes\r\nTheme=Fire.ui\r\nAddButton=23";
+  //char* configStr = "[Default]\r\nFolder=C:\\Users\\Videeki\\Music\\Vegyes\r\nTheme=Fire.ui\r\nAddButton=23";
   // Get the filename, key and value from the arguments
   char *filename = argv[1];
   char *key = argv[2];
   char *value = argv[3];
 
-  //openConfig(filename, configStr);
-  //printf("Main: %s\n", configStr);
+  char* configStr = openConfig(filename);
+  printf("Main: %s\n", configStr);
   parseConfig(configStr, &PRI);
-  //closeConfig(configStr);
+  closeConfig(configStr);
 
-  printf("Main Key: %s\n", PRI.sections[0].keyvalue[1].key);
-  printf("Main Value: %s\n", PRI.sections[0].keyvalue[1].value);
+  printf("Main Key: %s\n", PRI.sections[0].keyvalue[4].key);
+  printf("Main Value: %s\n", PRI.sections[0].keyvalue[4].value);
 
   return 0;
 }
 
-int openConfig(char* iniPath, char* configStr)
+char* openConfig(char* iniPath)
 {
     puts("OpenConfig start...");
     FILE *fp;
@@ -47,7 +47,7 @@ int openConfig(char* iniPath, char* configStr)
     size = ftell(fp);
     fseek(fp, 0L, SEEK_SET);
 
-    configStr = calloc(size + 1, sizeof(char));
+    char* configStr = calloc(size + 1, sizeof(char));
 
     if (configStr == NULL) {
         fclose(fp);
@@ -59,7 +59,7 @@ int openConfig(char* iniPath, char* configStr)
     fclose(fp);
     puts(configStr);
     puts("OpenConfig end...");
-    return 0;
+    return configStr;
 }
 
 int parseConfig(char* configStr, config* parsedConfig)
@@ -106,10 +106,37 @@ int parseConfig(char* configStr, config* parsedConfig)
   return 0;
 }
 
+int writeConfig(char* iniPath, config* parsedConfig)
+{
+  return 0;
+}
+
 int closeConfig(char* configStr)
 {
   puts("Close Config start...");
   free(configStr);
   puts("Close Config end...");
   return 0;
+}
+
+
+char* readKey(config* parsedConfig, char* section, char* key)
+{
+  return "readKey is not implemented yet";
+}
+
+int writeKey(config* parsedConfig, char* section, char* key, char* value)
+{
+  return 0;
+}
+
+char** getSectionNames(config* parseConfig)
+{
+  char* sectionNames[1] = {"getSectionNames is not implemented yet"};
+  return sectionNames;
+}
+char** getKeyNames(config* parseConfig, char* section)
+{
+  char* keyNames[1] = {"getKeyNames is not implemented yet"};
+  return keyNames;
 }
